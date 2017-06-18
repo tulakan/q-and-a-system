@@ -40,7 +40,7 @@ server.register([ // add route to app.js
         method: 'GET',
         path: '/index',
         handler: {
-            file: './public/QandA-System/dist/index.html'
+            file: './public/dist/index.html'
         }
     });
 
@@ -49,7 +49,7 @@ server.register([ // add route to app.js
         path: '/{path*}',
         handler: {
             directory: {
-                path: './public/QandA-System/dist'
+                path: './public/dist'
             }
         }
     });
@@ -59,17 +59,17 @@ server.register([ // add route to app.js
         path: '/assets/{path*}',
         handler: {
             directory: {
-                path: './public/QandA-System/dist/assets/'
+                path: './public/dist/assets/'
             }
         }
     });
-
+                      
     server.route({
         method: 'GET',
         path: '/vendors/{path*}',
         handler: {
             directory: {
-                path: './public/QandA-System/dist/vendors/'
+                path: './public/dist/vendors/'
             }
         }
     });
