@@ -13,7 +13,7 @@ server.connection({ port: port });
 server.ext('onPreResponse', corsHeaders); // add corsHeader on pre-response
 
 server.register({
-    register: require('hapi-swagger'), //add swagger
+    register: require('hapi-swagger'), //add swagger  module
     options: {
         apiVersion: "0.0.1"
     }
