@@ -30,11 +30,23 @@ server.register([ // add route to app.js
     require('./routes/quiz'),
     require('./routes/playlist'),
     require('./routes/answer'),
+    require('./routes/report'),
     // require('inert')
 ], (err) => {
     if (err) {
         throw err;
     }
+
+    server.route({
+        method: 'GET',
+        path: '/test',
+        handler: function(request, reply) {
+            reply({
+                statusCode : 200,
+                message : "API Work"
+            });
+        }
+    });
 
     server.route({
         method: 'GET',

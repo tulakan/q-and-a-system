@@ -41,12 +41,14 @@ exports.register = function(server, options, next) {
             quizModel.find({}, function (error, data) {
                 if (error) {
                     reply({
+                        status : false,
                         statusCode: 503,
                         message: 'Failed to get data',
                         data: error
                     });
                 } else {
                     reply({
+                        status : true,
                         statusCode: 200,
                         message: 'User Data Successfully Fetched',
                         data: data
