@@ -54,7 +54,9 @@ server.register([ // add route to app.js
         handler: function(request, reply) {
             console.log(request.payload);
             var userID = request.payload.events[0].source.userId
+            var replyToken = request.payload.events[0].replyToken
             console.log("userID -----> ",userID)
+            console.log("replyToken -----> ",replyToken)
             reply({
                 statusCode : 200,
                 message : "API Work"
