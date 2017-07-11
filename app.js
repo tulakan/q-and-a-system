@@ -49,6 +49,18 @@ server.register([ // add route to app.js
     });
 
     server.route({
+        method: 'POST',
+        path: '/linebot',
+        handler: function(request, reply) {
+            console.log(request.payload);
+            reply({
+                statusCode : 200,
+                message : "API Work"
+            });
+        }
+    });
+
+    server.route({
         method: 'GET',
         path: '/index',
         handler: {
