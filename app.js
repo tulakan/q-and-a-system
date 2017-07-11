@@ -69,7 +69,7 @@ server.register([ // add route to app.js
 
             // Configure the request
             var options = {
-                url: 'http://samwize.com',
+                url: 'https://api.line.me/v2/bot/message/push',
                 method: 'POST',
                 headers: headers,
                 form: {
