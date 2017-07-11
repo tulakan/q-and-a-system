@@ -66,6 +66,21 @@ server.register([ // add route to app.js
 
     server.route({
         method: 'GET',
+        path: '/callLineBot/{lat}/{lng}',
+        handler: function(request, reply) {
+            var lat = request.params.lat;
+            var lng = request.params.lng;
+            console.log("Latitude --> ",lat);
+            console.log("Longtitude --> ",lng);
+            reply({
+                statusCode : 200,
+                message : "recieve data successfully !"
+            });
+        }
+    });
+
+    server.route({
+        method: 'GET',
         path: '/index',
         handler: {
             file: './public/dist/index.html'
