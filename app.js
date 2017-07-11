@@ -54,10 +54,42 @@ server.register([ // add route to app.js
         handler: function (request, reply) {
             console.log(request.headers);
             console.log(request.payload);
-            if (request.payload.events[0].source.userId) {
+            if (request.payload.events) {
                 var userID = request.payload.events[0].source.userId;
-                console.log("userID -----> ",userID);
+                console.log("userID -----> ", userID);
             }
+
+            var request = require('request');
+
+            // Set the headers
+            var headers = {
+                'Authorization': 'Bearer NJ2PLLuiyCI2LvtqdKoQRDAv4Sk+pqkE9ikF083lwSHySRlrJJBNIcGDIiKQXR3JkajNLYtgOXYd+qPvyrF0B9xclq8gNFAb4LEJzPMibkgp2kYZB76myGUoeLHZeeiewtoiOIbHXuVbbrLAt4cVcQdB04t89/1O/w1cDnyilFU=',
+                'Content-Type': 'application/json'
+            }
+
+            // Configure the request
+            var options = {
+                url: 'http://samwize.com',
+                method: 'POST',
+                headers: headers,
+                form: {
+                    "to": "U8a681eaeb9de448f55df99ca8124d102",
+                    "messages": [{
+                        "type": "text",
+                        "text": "Hello Test Test"
+                    }]
+                }
+            }
+
+            // Start the request
+            request(options, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    // Print out the response body
+                    console.log("body -> ",body)
+                }else{
+                    console.log("error ->",error)
+                }
+            })
             // 
             // var replyToken = request.payload.events[0].replyToken
             // 
