@@ -85,6 +85,7 @@ server.register([ // add route to app.js
             request(options, function (error, response, body) {
                 if (!error) {
                     // Print out the response body
+                    console.log("response -> ",response)
                     console.log("body -> ",body)
                 }else{
                     console.log("error ->",error)
