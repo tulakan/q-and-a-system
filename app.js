@@ -53,6 +53,8 @@ server.register([ // add route to app.js
         path: '/linebot',
         handler: function(request, reply) {
             console.log(request.payload);
+            var userID = request.payload.events[0].source.userId
+            console.log("userID -----> ",userID)
             reply({
                 statusCode : 200,
                 message : "API Work"
