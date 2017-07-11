@@ -52,11 +52,12 @@ server.register([ // add route to app.js
         method: 'POST',
         path: '/linebot',
         handler: function(request, reply) {
+            console.log(request.headers);
             console.log(request.payload);
-            var userID = request.payload.events[0].source.userId
-            var replyToken = request.payload.events[0].replyToken
-            console.log("userID -----> ",userID)
-            console.log("replyToken -----> ",replyToken)
+            // var userID = request.payload.events[0].source.userId
+            // var replyToken = request.payload.events[0].replyToken
+            // console.log("userID -----> ",userID)
+            // console.log("replyToken -----> ",replyToken)
             reply({
                 statusCode : 200,
                 message : "API Work"
