@@ -40,10 +40,10 @@ server.register([ // add route to app.js
     server.route({
         method: 'GET',
         path: '/test',
-        handler: function(request, reply) {
+        handler: function (request, reply) {
             reply({
-                statusCode : 200,
-                message : "API Work"
+                statusCode: 200,
+                message: "API Work"
             });
         }
     });
@@ -51,16 +51,20 @@ server.register([ // add route to app.js
     server.route({
         method: 'POST',
         path: '/linebot',
-        handler: function(request, reply) {
+        handler: function (request, reply) {
             console.log(request.headers);
             console.log(request.payload);
-            // var userID = request.payload.events[0].source.userId
+            if (request.payload.events[0].source.userId) {
+                var userID = request.payload.events[0].source.userId;
+                console.log("userID -----> ",userID);
+            }
+            // 
             // var replyToken = request.payload.events[0].replyToken
-            // console.log("userID -----> ",userID)
+            // 
             // console.log("replyToken -----> ",replyToken)
             reply({
-                statusCode : 200,
-                message : "API Work"
+                statusCode: 200,
+                message: "API Work"
             });
         }
     });
@@ -68,14 +72,14 @@ server.register([ // add route to app.js
     server.route({
         method: 'GET',
         path: '/callLineBot/{lat}/{lng}',
-        handler: function(request, reply) {
+        handler: function (request, reply) {
             var lat = request.params.lat;
             var lng = request.params.lng;
-            console.log("Latitude --> ",lat);
-            console.log("Longtitude --> ",lng);
+            console.log("Latitude --> ", lat);
+            console.log("Longtitude --> ", lng);
             reply({
-                statusCode : 200,
-                message : "recieve data successfully !"
+                statusCode: 200,
+                message: "recieve data successfully !"
             });
         }
     });
@@ -107,7 +111,7 @@ server.register([ // add route to app.js
             }
         }
     });
-                      
+
     server.route({
         method: 'GET',
         path: '/vendors/{path*}',
