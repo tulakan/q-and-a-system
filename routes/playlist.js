@@ -4,14 +4,14 @@
 const Joi = require('joi');
 const mongoose = require('mongoose');
 
-exports.register = function(server, options, next) {
+exports.register = function (server, options, next) {
 
     const playlistModel = require('../models/playlistModel');
 
     // list all playlist
     server.route({
         method: 'GET',
-        path: '/playlist/list',
+        path: '/playlist/listAll',
         config: {
             // Include this API in swagger documentation
             tags: ['api'],
@@ -23,14 +23,14 @@ exports.register = function(server, options, next) {
             playlistModel.find({}, function (error, data) {
                 if (error) {
                     reply({
-                        status:false,
+                        status: false,
                         statusCode: 503,
                         message: 'Failed to get data',
                         data: error
                     });
                 } else {
                     reply({
-                        status:true,
+                        status: true,
                         statusCode: 200,
                         message: 'Playlist Data Successfully Fetched',
                         data: data
@@ -59,10 +59,10 @@ exports.register = function(server, options, next) {
         handler: function (request, reply) {
 
             //Finding user for particular userID
-            playlistModel.find({_id: request.params.id}, function (error, data) {
+            playlistModel.find({ _id: request.params.id }, function (error, data) {
                 if (error) {
                     reply({
-                        status:false,
+                        status: false,
                         statusCode: 503,
                         message: 'Failed to get data',
                         data: error
@@ -70,7 +70,7 @@ exports.register = function(server, options, next) {
                 } else {
                     if (data.length === 0) {
                         reply({
-                            status:true,
+                            status: true,
                             statusCode: 200,
                             message: 'Playlist Not Found',
                             data: data
@@ -99,13 +99,15 @@ exports.register = function(server, options, next) {
             // We use Joi plugin to validate request
             validate: {
                 payload: {
-                    playlistName : Joi.string().required(),
-                    playlistLearningGroup : Joi.string().required(),
-                    classLevel : Joi.string().required(),
-                    totalTime : Joi.number().required(),
-                    totalQuiz : Joi.number().required(),
-                    quizList : Joi.array().required(),
-                    criterion : Joi.string().required()
+                    name: Joi.string().required(),
+                    subject: Joi.string().required(),
+                    learningGroup: Joi.string().required(),
+                    classLevel: Joi.string().required(),
+                    totalTime: Joi.number().required(),
+                    totalQuiz: Joi.number().required(),
+                    quizList: Joi.array().required(),
+                    criterion: Joi.string().required(),
+                    status: Joi.number().required()
                 }
             }
         },
@@ -119,13 +121,13 @@ exports.register = function(server, options, next) {
             playlist.save(function (error) {
                 if (error) {
                     reply({
-                        status:false,
+                        status: false,
                         statusCode: 503,
                         message: error
                     });
                 } else {
                     reply({
-                        status:true,
+                        status: true,
                         statusCode: 201,
                         message: 'Playlist Saved Successfully'
                     });
@@ -135,50 +137,50 @@ exports.register = function(server, options, next) {
     });
 
     //spare
-    //search quiz by keyword
-    // server.route({
-    //     method: 'GET',
-    //     //Getting data for particular user "/api/user/1212313123"
-    //     path: '/quiz/searchQuizbyKeyword/{searchKeyword}',
-    //     config: {
-    //         tags: ['api'],
-    //         description: 'Search Quiz by Keyword',
-    //         notes: 'Search Quiz by Keyword',
-    //         validate: {
-    //             // Id is required field
-    //             params: {
-    //                 searchKeyword: Joi.string().required()
-    //             }
-    //         }
-    //     },
-    //     handler: function (request, reply) {
-    //         // const quiz = new quizModel(request.payload);
-    //         //Finding user for particular userID
-    //         quizModel.find({'question': {'$regex': request.params.searchKeyword}}, function (error, data) {
-    //             if (error) {
-    //                 reply({
-    //                     statusCode: 503,
-    //                     message: 'Failed to get data',
-    //                     data: error
-    //                 });
-    //             } else {
-    //                 if (data.length === 0) {
-    //                     reply({
-    //                         statusCode: 200,
-    //                         message: 'Quiz Not Found',
-    //                         data: data
-    //                     });
-    //                 } else {
-    //                     reply({
-    //                         statusCode: 200,
-    //                         message: 'Quiz Data Successfully Fetched',
-    //                         data: data
-    //                     });
-    //                 }
-    //             }
-    //         });
-    //     }
-    // });
+    // search playlist by keyword
+    server.route({
+        method: 'GET',
+        //Getting data for particular user "/api/user/1212313123"
+        path: '/playlist/searchPlaylist/{searchKeyword}',
+        config: {
+            tags: ['api'],
+            description: 'Search Playlist by Keyword',
+            notes: 'Search Playlist by Keyword',
+            validate: {
+                // Id is required field
+                params: {
+                    searchKeyword: Joi.string().required()
+                }
+            }
+        },
+        handler: function (request, reply) {
+            // const quiz = new quizModel(request.payload);
+            //Finding user for particular userID
+            playlistModel.find({'name': {'$regex': request.params.searchKeyword}}, function (error, data) {
+                if (error) {
+                    reply({
+                        statusCode: 503,
+                        message: 'Failed to get data',
+                        data: error
+                    });
+                } else {
+                    if (data.length === 0) {
+                        reply({
+                            statusCode: 200,
+                            message: 'Playlist Not Found',
+                            data: data
+                        });
+                    } else {
+                        reply({
+                            statusCode: 200,
+                            message: 'Playlist Data Successfully Fetched',
+                            data: data
+                        });
+                    }
+                }
+            });
+        }
+    });
 
     //delete quiz
     // server.route({

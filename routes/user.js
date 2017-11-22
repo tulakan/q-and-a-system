@@ -1,25 +1,21 @@
-/**
- * Created by Kanrawee Karaboot on 4/3/2017.
- */
 const Joi = require('joi');
 const mongoose = require('mongoose');
 
-exports.register = function(server, options, next) {
+exports.register = function (server, options, next) {
 
     const UserModel = require('../models/user');
-    // get all users data
+
+    // list All Account
     server.route({
         method: 'GET',
         path: '/user/listUser',
         config: {
-            // Include this API in swagger documentation
             tags: ['api'],
             description: 'Get All User data',
             notes: 'Get All User data'
         },
-        handler: function(request, reply) {
-            //Fetch all data from mongodb User Collection
-            UserModel.find({}, function(error, data) {
+        handler: function (request, reply) {
+            UserModel.find({}, function (error, data) {
                 if (error) {
                     reply({
                         statusCode: 503,
@@ -40,7 +36,7 @@ exports.register = function(server, options, next) {
     //get user by username
     server.route({
         method: 'GET',
-        path: '/user/getUserbyUsername/{username}',
+        path: '/user/getUserbyUsername/{userName}',
         config: {
             // Include this API in swagger documentation
             tags: ['api'],
@@ -49,13 +45,13 @@ exports.register = function(server, options, next) {
             validate: {
                 // Id is required field
                 params: {
-                    username: Joi.string().required()
+                    userName: Joi.string().required()
                 }
             }
         },
-        handler: function(request, reply) {
+        handler: function (request, reply) {
             //find username in user collection
-            UserModel.find({ 'username': { '$regex': request.params.username } }, function(error, data) {
+            UserModel.findOne({ 'userName': { '$regex': request.params.userName } }, function (error, data) {
                 if (error) {
                     reply({
                         statusCode: 503,
@@ -97,9 +93,9 @@ exports.register = function(server, options, next) {
                 }
             }
         },
-        handler: function(request, reply) {
+        handler: function (request, reply) {
             //search for equipmentNo in user collection
-            UserModel.find({ 'equipmentNo': { '$regex': request.params.deviceID } }, function(error, data) {
+            UserModel.find({ 'deviceUUID': { '$regex': request.params.deviceID } }, function (error, data) {
                 if (error) {
                     reply({
                         statusCode: 503,
@@ -137,22 +133,26 @@ exports.register = function(server, options, next) {
             //use Joi plugin to validate request
             validate: {
                 payload: {
-                    name: Joi.string().required(),
-                    accountType: Joi.string().required(),
-                    username: Joi.string().required(),
+                    userName: Joi.string().required(),
                     password: Joi.string().required(),
-                    equipmentNo: Joi.string(), //for student
-                    child: Joi.string() // for parent
+                    namePrefix: Joi.string().required(),
+                    firstName: Joi.string().required(),
+                    lastName: Joi.string().required(),
+                    accountType: Joi.string().required(),
+                    parentStudentName: [Joi.string().optional(), Joi.allow(null)], // for parent
+                    deviceUUID: [Joi.string().optional(), Joi.allow(null)], //for student
                 }
             }
         },
-        handler: function(request, reply) {
+        handler: function (request, reply) {
 
             // Create mongodb user object to save it into database
-            UserModel.find({ 'username': { '$regex': request.payload.username } }, function(error, data) {
+            UserModel.find({ 'userName': { '$regex': request.payload.userName } }, function (error, data) {
+                console.log('data --> ', data)
+                // if (data != undefined) {
                 if (data.length === 0) { //not found user name
                     const user = new UserModel(request.payload);
-                    user.save(function(error) {
+                    user.save(function (error) {
                         if (error) {
                             reply({
                                 status: false,
@@ -162,7 +162,7 @@ exports.register = function(server, options, next) {
                         } else {
                             reply({
                                 status: true,
-                                statusCode: 201,
+                                statusCode: 200,
                                 message: 'User Saved Successfully'
                             });
                         }
@@ -175,14 +175,33 @@ exports.register = function(server, options, next) {
                         data: data
                     });
                 }
+                // } else {
+                //     const user = new UserModel(request.payload);
+                //     user.save(function (error) {
+                //         if (error) {
+                //             reply({
+                //                 status: false,
+                //                 statusCode: 503,
+                //                 message: error
+                //             });
+                //         } else {
+                //             reply({
+                //                 status: true,
+                //                 statusCode: 200,
+                //                 message: 'User Saved Successfully'
+                //             });
+                //         }
+                //     });
+                // }
+
             });
         }
     });
 
     //updata user
     server.route({
-        method: 'PUT',
-        path: '/user/updateUser/{username}',
+        method: 'POST',
+        path: '/user/updateUser',
         config: {
             // Swagger documentation fields tags, description, note
             tags: ['api'],
@@ -191,24 +210,25 @@ exports.register = function(server, options, next) {
 
             // Joi api validation
             validate: {
-                params: {
-                    //`id` is required field and can only accept string data
-                    username: Joi.string().required()
-                },
+                // params: {
+                //     //`id` is required field and can only accept string data
+                // },
                 payload: {
-                    name: Joi.string().required(),
-                    accountType: Joi.string().required(),
-                    username: Joi.string().required(),
+                    userName: Joi.string().required(),
                     password: Joi.string().required(),
-                    equipmentNo: Joi.string(), //for student
-                    child: Joi.string() // for parent
+                    namePrefix: Joi.string().required(),
+                    firstName: Joi.string().required(),
+                    lastName: Joi.string().required(),
+                    accountType: Joi.string().required(),
+                    parentStudentName: [Joi.string().optional(), Joi.allow(null)], // for parent
+                    deviceUUID: [Joi.string().optional(), Joi.allow(null)], //for student
                 }
             }
         },
-        handler: function(request, reply) {
+        handler: function (request, reply) {
 
             // `findOneAndUpdate` is a mongoose modal methods to update a particular record.
-            UserModel.findOneAndUpdate({ username: request.params.username }, request.payload, function(error, data) {
+            UserModel.findOneAndUpdate({ userName: request.payload.userName }, request.payload, function (error, data) {
                 if (error) {
                     reply({
                         statusCode: 503,
@@ -241,10 +261,10 @@ exports.register = function(server, options, next) {
                 }
             }
         },
-        handler: function(request, reply) {
+        handler: function (request, reply) {
 
             // `findOneAndRemove` is a mongoose methods to remove a particular record into database.
-            UserModel.findOneAndRemove({ username: request.params.username }, function(error) {
+            UserModel.findOneAndRemove({ username: request.params.username }, function (error) {
                 if (error) {
                     reply({
                         statusCode: 503,
@@ -262,7 +282,7 @@ exports.register = function(server, options, next) {
         }
     });
 
-    //sigin
+    //signin
     server.route({
         method: 'POST',
         path: '/user/signin',
@@ -278,16 +298,16 @@ exports.register = function(server, options, next) {
                 }
             }
         },
-        handler: function(request, reply) {
+        handler: function (request, reply) {
             //find username in user collection
-            UserModel.find({ 
-                'username': { 
-                    '$regex': request.payload.username 
+            UserModel.find({
+                'userName': {
+                    '$regex': request.payload.username
                 },
-                'password':{ 
+                'password': {
                     '$regex': request.payload.password
                 }
-            }, function(error, data) {
+            }, function (error, data) {
                 if (error) {
                     reply({
                         statusCode: 503,
@@ -297,15 +317,15 @@ exports.register = function(server, options, next) {
                 } else {
                     if (data.length === 0) {
                         reply({
-                            statusCode: 200,
+                            statusCode: 404,
                             message: 'User Not Found',
-                            data: data
+                            // data: data
                         });
                     } else {
                         reply({
                             statusCode: 200,
                             message: 'signin User Successfully Fetched',
-                            data: data
+                            data: data[0]
                         });
                     }
                 }
