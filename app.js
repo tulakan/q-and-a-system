@@ -26,11 +26,11 @@ server.register({
 });
 
 server.register([ // add route to app.js
-    require('./routes/user'),
-    require('./routes/quiz'),
-    require('./routes/playlist'),
-    require('./routes/answer'),
-    require('./routes/report'),
+    // require('./routes/user'),
+    // require('./routes/quiz'),
+    // require('./routes/playlist'),
+    // require('./routes/answer'),
+    // require('./routes/report'),
     require('./routes/mqttService'),
     // require('inert')
 ], (err) => {

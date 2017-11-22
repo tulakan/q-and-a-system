@@ -286,12 +286,9 @@ exports.register = function (server, options, next) {
         }
     })
 
-
-
-    //init GW 
     server.route({
         method: 'GET',
-        path: '/MQTTService/getAnswerData/{classIdx}/{roomIdx}/',
+        path: '/MQTTService/getAnswerData/{classIdx}/{roomIdx}',
         config: {
             // Include this API in swagger documentation
             tags: ['api'],
@@ -357,6 +354,8 @@ exports.register = function (server, options, next) {
                     }
                 }
                 console.log('timer reply data --> ', replyData);
+                client.end()
+                client = mqtt.connect('mqtt://m12.cloudmqtt.com', mqttOptions)
                 reply(replyData)
             }, 2000)
         }
