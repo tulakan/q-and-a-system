@@ -361,23 +361,6 @@ exports.register = function (server, options, next) {
         }
     })
 
-
-
-    //init GW (initData,classroomName)
-    // server.route({
-    //     method: 'GET',
-    //     path: '/testMQTT',
-    //     config: {
-    //         // Include this API in swagger documentation
-    //         tags: ['api'],
-    //         description: 'test mqtt service',
-    //         notes: 'if work it will replay OK!'
-    //     },
-    //     handler: function (request, reply) {
-
-    //     }
-    // })
-
     return next();
 };
 
